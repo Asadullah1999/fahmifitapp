@@ -65,16 +65,16 @@ class DocumentRepository {
 
     // Generate PDF from images
     final pdfBytes = await _generatePdf(imagePaths);
-    final tempPdfPath = p.join(docsDir, '$id.tmp.pdf');
+    final tempPdfPath = p.join(docsDir.path, '$id.tmp.pdf');
     await File(tempPdfPath).writeAsBytes(pdfBytes);
 
     // Encrypt PDF
-    final encryptedPath = p.join(docsDir, '$id.enc');
+    final encryptedPath = p.join(docsDir.path, '$id.enc');
     await _encryption.encryptFile(File(tempPdfPath), encryptedPath);
     await File(tempPdfPath).delete();
 
     // Generate thumbnail from first image
-    final thumbnailPath = p.join(docsDir, '$id.thumb.enc');
+    final thumbnailPath = p.join(docsDir.path, '$id.thumb.enc');
     await _encryption.encryptFile(File(imagePaths.first), thumbnailPath);
 
     final now = DateTime.now();
