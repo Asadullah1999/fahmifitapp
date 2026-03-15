@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -9,15 +10,18 @@ class BiometricAuthService {
   static const _biometricEnabledKey = 'docvault_biometric_enabled';
 
   Future<bool> isBiometricAvailable() async {
+    if (kIsWeb) return false;
     return await _auth.canCheckBiometrics && await _auth.isDeviceSupported();
   }
 
   Future<List<BiometricType>> availableBiometrics() async {
+    if (kIsWeb) return [];
     return await _auth.getAvailableBiometrics();
   }
 
   /// Authenticates with biometrics or device credentials.
   Future<bool> authenticate({String reason = 'Unlock DocVault'}) async {
+    if (kIsWeb) return true;
     try {
       return await _auth.authenticate(
         localizedReason: reason,
@@ -32,6 +36,7 @@ class BiometricAuthService {
   }
 
   Future<bool> authenticateWithBiometric() async {
+    if (kIsWeb) return false;
     try {
       return await _auth.authenticate(
         localizedReason: 'Use biometrics to unlock DocVault',

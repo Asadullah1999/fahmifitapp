@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -13,8 +14,12 @@ class HiveDatabase {
   static const String settingsBox = 'settings';
 
   static Future<void> initialize() async {
-    final appDir = await getApplicationDocumentsDirectory();
-    await Hive.initFlutter(appDir.path);
+    if (kIsWeb) {
+      await Hive.initFlutter();
+    } else {
+      final appDir = await getApplicationDocumentsDirectory();
+      await Hive.initFlutter(appDir.path);
+    }
 
     // Register type adapters
     Hive.registerAdapter(DocumentEntityAdapter());
